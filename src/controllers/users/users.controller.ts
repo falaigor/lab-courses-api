@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Request,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { UsersService } from 'src/services/users/users.service';
@@ -20,13 +21,18 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
+  findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<User> {
     return this.usersService.findOne(id);
+  }
+
+  @Get('profile')
+  getProfile(@Request() req): Promise<User> {
+    return this.usersService.getUser(req.user?.email);
   }
 
   @Patch(':id')

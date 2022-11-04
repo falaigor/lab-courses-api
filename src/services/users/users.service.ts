@@ -37,6 +37,28 @@ export class UsersService {
     });
   }
 
+  async getUser(email) {
+    try {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          email,
+        },
+      });
+
+      console.log(user);
+      return user;
+    } catch (error) {
+      if (error?.code === 'P2002') {
+        throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+      }
+
+      throw new HttpException(
+        'Something went wrong',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   async update(id: string, data: User) {
     const userExists = await this.prisma.user.findUnique({
       where: {

@@ -8,10 +8,8 @@ datasource db {
 }
 
 model Role {
-  id     String  @id @default(uuid())
-  name   String  @unique
-  User   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  id   String @id @default(uuid())
+  name String @unique
 
   @@map("roles")
 }
@@ -20,9 +18,8 @@ model User {
   id        String   @id @default(uuid())
   name      String
   email     String   @unique
-  password  String?
+  password  String
   avatar    String?
-  roles     Role[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

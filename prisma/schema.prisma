@@ -9,7 +9,7 @@ datasource db {
 
 model Role {
   id     String  @id @default(uuid())
-  name   String
+  name   String  @unique
   User   User?   @relation(fields: [userId], references: [id])
   userId String?
 
@@ -19,7 +19,7 @@ model Role {
 model User {
   id        String   @id @default(uuid())
   name      String
-  email     String
+  email     String   @unique
   password  String?
   avatar    String?
   roles     Role[]

@@ -1,25 +1,76 @@
-import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UsersService {
-  create(data: User) {
-    return 'This action adds a new user';
+  constructor(private prisma: PrismaService) {}
+
+  async create(data: User) {
+    try {
+      const user = await this.prisma.user.create({
+        data,
+      });
+
+      return user;
+    } catch (error) {
+      if (error?.code === 'P2002') {
+        throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+      }
+
+      throw new HttpException(
+        'Something went wrong',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    return this.prisma.user.findMany();
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    return this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
-  update(id: string, data: User) {
-    return `This action updates a #${id} user`;
+  async update(id: string, data: User) {
+    const userExists = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!userExists) {
+      throw new Error('user does not exists!');
+    }
+
+    return await this.prisma.user.update({
+      data,
+      where: {
+        id,
+      },
+    });
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`;
+  async delete(id: string) {
+    const userExists = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!userExists) {
+      throw new Error('user does not exists!');
+    }
+
+    return await this.prisma.user.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

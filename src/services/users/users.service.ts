@@ -48,12 +48,21 @@ export class UsersService {
       throw new Error('user does not exists!');
     }
 
-    return await this.prisma.user.update({
-      data,
-      where: {
-        id,
-      },
-    });
+    try {
+      const user = await this.prisma.user.update({
+        data,
+        where: {
+          id,
+        },
+      });
+
+      return user;
+    } catch (error) {
+      throw new HttpException(
+        'Something went wrong',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async delete(id: string) {

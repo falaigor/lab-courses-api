@@ -16,6 +16,38 @@ model User {
   roles     String[] @default(["usr"])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Courses   Course[]
 
   @@map("users")
+}
+
+model Course {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  cover       String?
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    String
+  status      String   @default("inactive")
+  classes     Classe[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("courses")
+}
+
+model Classe {
+  id                       String  @id @default(uuid())
+  name                     String
+  description              String
+  type                     String
+  video                    String
+  complementaryMaterial    Boolean
+  urlComplementaryMaterial String?
+  status                   String  @default("inactive")
+  complete                 Boolean
+  Course                   Course? @relation(fields: [courseId], references: [id])
+  courseId                 String?
+
+  @@map("classes")
 }

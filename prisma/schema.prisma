@@ -3,15 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgres"
   url      = env("DATABASE_URL")
-}
-
-model Role {
-  id   String @id @default(uuid())
-  name String @unique
-
-  @@map("roles")
 }
 
 model User {
@@ -20,6 +13,7 @@ model User {
   email     String   @unique
   password  String
   avatar    String?
+  roles     String[] @default(["usr"])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

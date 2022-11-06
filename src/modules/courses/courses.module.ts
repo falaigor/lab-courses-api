@@ -7,6 +7,5 @@ import { CoursesService } from 'src/services/courses/courses.service';
   imports: [PrismaModule.forRoot()],
   controllers: [CoursesController],
   providers: [CoursesService],
-  exports: [CoursesService],
 })
 export class CoursesModule {}

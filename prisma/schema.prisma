@@ -29,14 +29,14 @@ model Course {
   author      User     @relation(fields: [authorId], references: [id])
   authorId    String
   status      String   @default("inactive")
-  classes     Classe[]
+  classes     Class[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@map("courses")
 }
 
-model Classe {
+model Class {
   id                       String  @id @default(uuid())
   name                     String
   description              String

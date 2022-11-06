@@ -18,25 +18,25 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() data: User) {
+  create(@Body() data: User): Promise<User> {
     return this.usersService.create(data);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(): Promise<User[]> {
-    return this.usersService.findAll();
+  getAll(): Promise<User[]> {
+    return this.usersService.getAll();
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<User> {
-    return this.usersService.findOne(id);
+  getById(@Param('id') id: string): Promise<User> {
+    return this.usersService.getById(id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() data: User) {
+  update(@Param('id') id: string, @Body() data: User): Promise<User> {
     return this.usersService.update(id, data);
   }
 

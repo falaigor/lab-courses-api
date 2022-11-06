@@ -1,25 +1,71 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Course } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class CoursesService {
-  create(data: Course) {
-    return 'This action adds a new course';
+  constructor(private prisma: PrismaService) {}
+
+  async create(data: Course) {
+    try {
+      const course = await this.prisma.course.create({
+        data,
+      });
+
+      return course;
+    } catch (error) {
+      throw new HttpException(
+        'Something went wrong',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
-  findAll() {
-    return `This action returns all courses`;
+  async getAll() {
+    return await this.prisma.course.findMany();
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} course`;
+  async getById(id: string) {
+    return await this.prisma.course.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
-  update(id: string, data: Course) {
-    return `This action updates a #${id} course`;
+  async update(id: string, data: Course) {
+    const courseExists = await this.prisma.course.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!courseExists) {
+      throw new Error('course does not exists!');
+    }
+
+    try {
+      const user = await this.prisma.course.update({
+        data,
+        where: {
+          id,
+        },
+      });
+
+      return user;
+    } catch (error) {
+      throw new HttpException(
+        'Something went wrong',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} course`;
+  delete(id: string) {
+    return this.prisma.course.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

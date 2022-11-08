@@ -9,10 +9,13 @@ export class UsersService {
 
   async create(data: User) {
     try {
-      data.password = hashPassword(data.password);
+      const passHashed = hashPassword(data.password);
 
       const user = await this.prisma.user.create({
-        data,
+        data: {
+          ...data,
+          password: passHashed,
+        },
       });
 
       return user;
@@ -65,8 +68,13 @@ export class UsersService {
     }
 
     try {
+      const passHashed = hashPassword(data.password);
+
       const user = await this.prisma.user.update({
-        data,
+        data: {
+          ...data,
+          password: passHashed,
+        },
         where: {
           id,
         },

@@ -1,10 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import { Class } from '@prisma/client';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Class, PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class ClassesService {
-  create(data: Class) {
-    return 'This action adds a new class';
+  constructor(private prisma: PrismaClient) {}
+
+  async create(data: Class) {
+    try {
+      return await this.prisma.class.create({
+        data,
+      });
+    } catch (error) {
+      throw new HttpException(
+        'Something went wrong',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   getAll() {

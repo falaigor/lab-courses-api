@@ -56,7 +56,11 @@ export class ClassesService {
     }
   }
 
-  delete(id: string) {
-    return `This action removes a #${id} class`;
+  async delete(id: string) {
+    return await this.prisma.class.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

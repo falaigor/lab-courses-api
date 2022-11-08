@@ -18,16 +18,42 @@ export class ClassesService {
     }
   }
 
-  getAll() {
-    return `This action returns all classes`;
+  async getAll() {
+    return await this.prisma.class.findMany();
   }
 
-  getById(id: string) {
-    return `This action returns a #${id} class`;
+  async getById(id: string) {
+    return await this.prisma.class.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
-  update(id: string, data: Class) {
-    return `This action updates a #${id} class`;
+  async update(id: string, data: Class) {
+    const classExists = await this.prisma.class.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!classExists) {
+      throw new Error('class does not exists!');
+    }
+
+    try {
+      return await this.prisma.class.update({
+        data,
+        where: {
+          id,
+        },
+      });
+    } catch (err) {
+      throw new HttpException(
+        'Something went wrong',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   delete(id: string) {

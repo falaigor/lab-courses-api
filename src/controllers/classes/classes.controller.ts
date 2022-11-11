@@ -29,9 +29,9 @@ export class ClassesController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  getById(@Param('id') id: string) {
-    return this.classesService.getById(id);
+  @Get(':slug')
+  getBySlug(@Param('slug') slug: string) {
+    return this.classesService.getBySlug(slug);
   }
 
   @UseGuards(JwtAuthGuard)

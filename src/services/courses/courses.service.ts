@@ -33,6 +33,14 @@ export class CoursesService {
     });
   }
 
+  async getBySlug(slug: string) {
+    return await this.prisma.course.findUnique({
+      where: {
+        slug,
+      },
+    });
+  }
+
   async update(id: string, data: Course) {
     const courseExists = await this.prisma.course.findUnique({
       where: {

@@ -30,6 +30,7 @@ model Course {
   authorId    String
   status      String   @default("inactive")
   classes     Class[]
+  slug        String   @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -45,6 +46,7 @@ model Class {
   complementaryMaterial    Boolean
   urlComplementaryMaterial String?
   status                   String  @default("inactive")
+  slug                     String  @unique
   complete                 Boolean
   Course                   Course? @relation(fields: [courseId], references: [id])
   courseId                 String?
